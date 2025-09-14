@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НЕГИК - Мои социальные сети</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        .title {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .auth-button, .update-button, .logout-button, .send-idea, .save-response, .ban-user {
+            background: linear-gradient(45deg, #28a745, #218838);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px;
+        }
+        .ban-user {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+        }
+        .auth-button:hover, .update-button:hover, .logout-button:hover, .send-idea:hover, .save-response:hover, .ban-user:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            margin: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .button i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .button::before {
+            content: '';
+
+position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s;
+        }
+        .button:hover::before {
+            left: 0;
+        }
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .youtube {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+        }
+        .telegram {
+            background: linear-gradient(45deg, #0088cc, #006699);
+        }
+        .twitch {
+            background: linear-gradient(45deg, #6441a5, #4b367c);
+        }
+        .discord {
+            background: linear-gradient(45deg, #5865F2, #404EED);
+        }
+        .ideas {
+            background: linear-gradient(45deg, #00b7eb, #0078a8);
+        }
+        .hidden {
+            display: none;
+        }
+        .admin-panel {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .admin-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            opacity: 0.7;
+            z-index: 20;
+        }
+        .admin-toggle:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .auth-modal, .idea-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        .flying-speed {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: url('https://via.placeholder.com/100?text=iShowSpeed') no-repeat center;
+            background-size: contain;
+            z-index: 5;
+            animation: fly 10s linear infinite;
+            opacity: 0.8;
+        }
+        .flying-speed-2 {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: url('https://via.placeholder.com/80?text=iShowSpeed2') no-repeat center;
+            background-size: contain;
+            z-index: 5;
+            animation: fly-reverse 12s linear infinite;
+            opacity: 0.8;
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50vw, 20vh) rotate(45deg); }
+            50% { transform: translate(80vw, 60vh) rotate(-45deg); }
+            75% { transform: translate(20vw, 80vh) rotate(90deg); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes fly-reverse {
+            0% { transform: translate(80vw, 80vh) rotate(-90deg); }
+            25% { transform: translate(20vw, 60vh) rotate(45deg); }
+            50% { transform: translate(50vw, 20vh) rotate(-45deg); }
+            75% { transform: translate(0, 0) rotate(90deg); }
+            100% { transform: translate(80vw, 80vh) rotate(-90deg); }
+        }
+        .ideas-list {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .user-section {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+.idea-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .idea-item p {
+            margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .title {
+                font-size: 2.5em;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .button {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+            .admin-toggle {
+                font-size: 1.2em;
+                top: 10px;
+                right: 10px;
+            }
+            .auth-modal, .idea-modal {
+                width: 90%;
+            }
+            .flying-speed, .flying-speed-2 {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flying-speed"></div>
+    <div class="flying-speed-2"></div>
+    <button class="admin-toggle" onclick="toggleAuth()" title="Вход в админ-панель"><i class="fas fa-lock"></i></button>
+    <div id="auth-modal" class="auth-modal hidden">
+        <h2>Вход в админ-панель</h2>
+        <div class="form-group">
+            <label for="password">Введите пароль</label>
+            <input type="password" id="password" placeholder="Пароль">
+        </div>
+        <button class="auth-button" onclick="checkPassword()">Войти</button>
+    </div>
+    <div id="idea-modal" class="idea-modal hidden">
+        <h2>Идеи для стрима</h2>
+        <div class="form-group">
+            <label for="idea-username">Ваше имя</label>
+            <input type="text" id="idea-username" placeholder="Введите имя">
+        </div>
+        <div class="form-group">
+            <label for="idea-text">Ваша идея</label>
+            <textarea id="idea-text" placeholder="Введите идею" rows="4"></textarea>
+        </div>
+        <button class="send-idea" onclick="sendIdea()">Отправить</button>
+        <button onclick="toggleIdeaModal()">Закрыть</button>
+    </div>
+    <div class="container">
+        <div class="title">НЕГИК</div>
+        <div id="admin-section" class="hidden">
+            <h1>Админ-панель</h1>
+            <div class="admin-panel">
+                <div class="form-group">
+                    <label for="youtube-link">Ссылка на YouTube</label>
+                    <input type="text" id="youtube-link" placeholder="Введите ссылку на YouTube">
+                </div>
+                <div class="form-group">
+                    <label for="telegram-link">Ссылка на Telegram</label>
+                    <input type="text" id="telegram-link" placeholder="Введите ссылку на Telegram">
+                </div>
+                <div class="form-group">
+                    <label for="twitch-link">Ссылка на Twitch</label>
+                    <input type="text" id="twitch-link" placeholder="Введите ссылку на Twitch">
+                </div>
+                <div class="form-group">
+                    <label for="discord-link">Ссылка на Discord</label>
+                    <input type="text" id="discord-link" placeholder="Введите ссылку на Discord">
+                </div>
+                <button class="update-button" onclick="updateLinks()">Обновить ссылки</button>
+            </div>
+            <div class="admin-panel">
+                <h1>Идеи для стрима</h1>
+                <div id="ideas-list" class="ideas-list"></div>
+            </div>
+            <button class="logout-button" onclick="logout()">Выйти</button>
+        </div>
+        <div id="public-section">
+            <h1>Мои соцсети</h1>
+            <div>
+                <a href="https://www.youtube.com" id="youtube-button" class="button youtube" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+
+<a href="https://t.me/telegram" id="telegram-button" class="button telegram" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                <a href="https://www.twitch.tv" id="twitch-button" class="button twitch" target="_blank"><i class="fab fa-twitch"></i> Twitch</a>
+                <a href="https://discord.com" id="discord-button" class="button discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" id="ideas-button" class="button ideas" onclick="toggleIdeaModal()"><i class="fas fa-lightbulb"></i> Идеи для стрима</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Замените на ваш Firebase config из Firebase console
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlaofk5CKxQGih6ZHrvOfDHw_OhaXmw24",
+            authDomain: "negeek-22e36.firebaseapp.com",
+            databaseURL: "https://negeek-22e36-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "negeek-22e36",
+            storageBucket: "negeek-22e36.firebasestorage.app",
+            messagingSenderId: "269290215052",
+            appId: "1:269290215052:web:6f2c56c6a344ccc63e8da9"
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getDatabase, ref, set, push, update, get, onValue, off } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getDatabase(app);
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        const correctPassword = "admin123"; // Измените на свой пароль
+
+        // Загрузка ссылок из localStorage
+        window.onload = function() {
+            try {
+                const youtubeLink = localStorage.getItem('youtubeLink') || 'https://www.youtube.com';
+                const telegramLink = localStorage.getItem('telegramLink') || 'https://t.me/telegram';
+                const twitchLink = localStorage.getItem('twitchLink') || 'https://www.twitch.tv';
+                const discordLink = localStorage.getItem('discordLink') || 'https://discord.com';
+                document.getElementById('youtube-button').href = youtubeLink;
+                document.getElementById('telegram-button').href = telegramLink;
+                document.getElementById('twitch-button').href = twitchLink;
+                document.getElementById('discord-button').href = discordLink;
+                document.getElementById('youtube-link').value = youtubeLink;
+                document.getElementById('telegram-link').value = telegramLink;
+                document.getElementById('twitch-link').value = twitchLink;
+                document.getElementById('discord-link').value = discordLink;
+                console.log("Links loaded from localStorage");
+            } catch (error) {
+                console.error("Error loading links:", error);
+            }
+        };
+
+        function toggleAuth() {
+            try {
+                const authModal = document.getElementById('auth-modal');
+                if (authModal) {
+                    authModal.classList.toggle('hidden');
+                    console.log("Auth modal toggled");
+                } else {
+                    console.error("Auth modal not found");
+                }
+            } catch (error) {
+                console.error("Error in toggleAuth:", error);
+            }
+        }
+
+        function checkPassword() {
+            try {
+                const password = document.getElementById('password').value;
+                if (password === correctPassword) {
+                    document.getElementById('auth-modal').classList.add('hidden');
+
+document.getElementById('admin-section').classList.remove('hidden');
+                    document.getElementById('public-section').classList.add('hidden');
+                    document.getElementById('password').value = '';
+                    loadIdeas();
+                    console.log("Admin panel opened");
+                } else {
+                    alert('Неверный пароль!');
+                    console.log("Incorrect password entered");
+                }
+            } catch (error) {
+                console.error("Error in checkPassword:", error);
+            }
+        }
+
+        function updateLinks() {
+            try {
+                const youtubeLink = document.getElementById('youtube-link').value;
+                const telegramLink = document.getElementById('telegram-link').value;
+                const twitchLink = document.getElementById('twitch-link').value;
+                const discordLink = document.getElementById('discord-link').value;
+
+                const urlPattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-./?%&=]*)?$/;
+
+                if (youtubeLink && urlPattern.test(youtubeLink)) {
+                    document.getElementById('youtube-button').href = youtubeLink;
+                    localStorage.setItem('youtubeLink', youtubeLink);
+                } else if (youtubeLink) {
+                    alert('Пожалуйста, введите корректную ссылку для YouTube');
+                }
+
+                if (telegramLink && urlPattern.test(telegramLink)) {
+                    document.getElementById('telegram-button').href = telegramLink;
+                    localStorage.setItem('telegramLink', telegramLink);
+                } else if (telegramLink) {
+                    alert('Пожалуйста, введите корректную ссылку для Telegram');
+                }
+
+                if (twitchLink && urlPattern.test(twitchLink)) {
+                    document.getElementById('twitch-button').href = twitchLink;
+                    localStorage.setItem('twitchLink', twitchLink);
+                } else if (twitchLink) {
+                    alert('Пожалуйста, введите корректную ссылку для Twitch');
+                }
+
+                if (discordLink && urlPattern.test(discordLink)) {
+                    document.getElementById('discord-button').href = discordLink;
+                    localStorage.setItem('discordLink', discordLink);
+                } else if (discordLink) {
+                    alert('Пожалуйста, введите корректную ссылку для Discord');
+                }
+                console.log("Links updated");
+            } catch (error) {
+                console.error("Error in updateLinks:", error);
+            }
+        }
+
+        function logout() {
+            try {
+                document.getElementById('admin-section').classList.add('hidden');
+                document.getElementById('public-section').classList.remove('hidden');
+                document.getElementById('password').value = '';
+                if (db) off(ref(db, 'ideas'));
+                console.log("Logged out");
+            } catch (error) {
+                console.error("Error in logout:", error);
+            }
+        }
+
+        function toggleIdeaModal() {
+            try {
+                const ideaModal = document.getElementById('idea-modal');
+                if (ideaModal) {
+                    ideaModal.classList.toggle('hidden');
+                    console.log("Idea modal toggled");
+                } else {
+                    console.error("Idea modal not found");
+                }
+            } catch (error) {
+                console.error("Error in toggleIdeaModal:", error);
+            }
+        }
+
+        async function sendIdea() {
+            try {
+                if (!db) throw new Error("Firebase database not initialized");
+                const username = document.getElementById('idea-username').value.trim();
+                const idea = document.getElementById('idea-text').value.trim();
+
+if (!username || !idea) {
+                    alert('Заполните имя и идею!');
+                    console.log("Missing username or idea");
+                    return;
+                }
+
+                const banRef = ref(db, 'bans/' + username);
+                const banSnapshot = await get(banRef);
+                if (banSnapshot.exists()) {
+                    alert('Вы забанены!');
+                    console.log("User is banned:", username);
+                    return;
+                }
+
+                const ideasRef = ref(db, 'ideas');
+                const newIdeaRef = push(ideasRef);
+                await set(newIdeaRef, {
+                    username: username,
+                    idea: idea,
+                    response
+
+timestamp: Date.now()
+                });
+
+                alert('Идея отправлена!');
+                document.getElementById('idea-username').value = '';
+                document.getElementById('idea-text').value = '';
+                toggleIdeaModal();
+                console.log("Idea sent:", username, idea);
+            } catch (error) {
+                console.error("Error in sendIdea:", error);
+                alert("Ошибка при отправке идеи: " + error.message);
+            }
+        }
+
+        function loadIdeas() {
+            try {
+                if (!db) throw new Error("Firebase database not initialized");
+                const ideasRef = ref(db, 'ideas');
+                onValue(ideasRef, (snapshot) => {
+                    const data = snapshot.val();
+                    const ideasList = document.getElementById('ideas-list');
+                    ideasList.innerHTML = '';
+
+                    if (!data) {
+                        ideasList.innerHTML = '<p>Нет идей.</p>';
+                        console.log("No ideas found");
+                        return;
+                    }
+
+                    const groupedIdeas = {};
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (!groupedIdeas[value.username]) {
+                            groupedIdeas[value.username] = [];
+                        }
+                        groupedIdeas[value.username].push({key, ...value});
+                    });
+
+                    Object.entries(groupedIdeas).forEach(([username, ideas]) => {
+                        const userSection = document.createElement('div');
+                        userSection.classList.add('user-section');
+
+                        const userHeader = document.createElement('div');
+                        userHeader.classList.add('user-header');
+                        const userTitle = document.createElement('h3');
+                        userTitle.textContent = username;
+                        const banBtn = document.createElement('button');
+                        banBtn.classList.add('ban-user');
+                        banBtn.textContent = 'Забанить';
+                        banBtn.onclick = () => banUser(username);
+                        userHeader.appendChild(userTitle);
+                        userHeader.appendChild(banBtn);
+                        userSection.appendChild(userHeader);
+
+                        ideas.forEach(idea => {
+                            const ideaItem = document.createElement('div');
+                            ideaItem.classList.add('idea-item');
+
+                            const ideaText = document.createElement('p');
+                            ideaText.textContent = Идея: ${idea.idea};
+                            ideaItem.appendChild(ideaText);
+
+                            const responseText = document.createElement('p');
+                            responseText.textContent = Ответ: ${idea.response || 'Нет ответа'};
+                            ideaItem.appendChild(responseText);
+
+                            const responseInput = document.createElement('input');
+                            responseInput.type = 'text';
+                            responseInput.placeholder = 'Введите ответ';
+                            responseInput.value = idea.response || '';
+                            ideaItem.appendChild(responseInput);
+
+                            const saveBtn = document.createElement('button');
+                            saveBtn.classList.add('save-response');
+                            saveBtn.textContent = 'Сохранить ответ';
+                            saveBtn.onclick = () => saveResponse(idea.key, responseInput.value);
+                            ideaItem.appendChild(saveBtn);
+
+                            userSection.appendChild(ideaItem);
+                        });
+
+ideasList.appendChild(userSection);
+                    });
+                    console.log("Ideas loaded");
+                }, (error) => {
+                    console.error("Error loading ideas:", error);
+                });
+            } catch (error) {
+                console.error("Error in loadIdeas:", error);
+            }
+        }
+
+        async function saveResponse(ideaKey, response) {
+            try {
+                if (!db) throw new Error("Firebase database not initialized");
+                const ideaRef = ref(db, 'ideas/' + ideaKey);
+                await update(ideaRef, { response });
+                alert('Ответ сохранён!');
+                console.log("Response saved for idea:", ideaKey);
+            } catch (error) {
+                console.error("Error in saveResponse:", error);
+                alert("Ошибка при сохранении ответа: " + error.message);
+            }
+        }
+
+        async function banUser(username) {
+            try {
+                if (!db) throw new Error("Firebase database not initialized");
+                if (confirm(Забанить пользователя ${username}?)) {
+                    const banRef = ref(db, 'bans/' + username);
+                    await set(banRef, true);
+                    alert('Пользователь забанен!');
+                    console.log("User banned:", username);
+                }
+            } catch (error) {
+                console.error("Error in banUser:", error);
+                alert("Ошибка при бане пользователя: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
