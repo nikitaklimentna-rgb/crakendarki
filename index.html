@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>НЕГИК - Мои социальные сети</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+        .title {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .auth-button, .update-button, .logout-button {
+            background: linear-gradient(45deg, #28a745, #218838);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 10px;
+        }
+        .auth-button:hover, .update-button:hover, .logout-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            margin: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .button i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s;
+        }
+        .button:hover::before {
+            left: 0;
+        }
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+}
+        .youtube {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+        }
+        .telegram {
+            background: linear-gradient(45deg, #0088cc, #006699);
+        }
+        .twitch {
+            background: linear-gradient(45deg, #6441a5, #4b367c);
+        }
+        .hidden {
+            display: none;
+        }
+        .admin-panel {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .admin-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            opacity: 0.7;
+            z-index: 20;
+        }
+        .admin-toggle:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .auth-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+        .flying-speed {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: url('https://via.placeholder.com/100?text=iShowSpeed') no-repeat center;
+            background-size: contain;
+            z-index: 5;
+            animation: fly 10s linear infinite;
+            opacity: 0.8;
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50vw, 20vh) rotate(45deg); }
+            50% { transform: translate(80vw, 60vh) rotate(-45deg); }
+            75% { transform: translate(20vw, 80vh) rotate(90deg); }
+            100% { transform: translate(0, 0); }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .title {
+                font-size: 2.5em;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .button {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+            .admin-toggle {
+                font-size: 1.2em;
+                top: 10px;
+                right: 10px;
+            }
+            .auth-modal {
+                width: 80%;
+            }
+            .flying-speed {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flying-speed"></div>
+    <button class="admin-toggle" onclick="toggleAuth()" title="Вход в админ-панель"><i class="fas fa-lock"></i></button>
+    <div id="auth-modal" class="auth-modal hidden">
+        <h2>Вход в админ-панель</h2>
+        <div class="form-group">
+            <label for="password">Введите пароль</label>
+            <input type="password" id="password" placeholder="Пароль">
+        </div>
+        <button class="auth-button" onclick="checkPassword()">Войти</button>
+    </div>
+    <div class="container">
+        <div class="title">НЕГИК</div>
+        <div id="admin-section" class="hidden">
+            <h1>Админ-панель</h1>
+            <div class="admin-panel">
+                <div class="form-group">
+                    <label for="youtube-link">Ссылка на YouTube</label>
+                    <input type="text" id="youtube-link" placeholder="Введите ссылку на YouTube">
+                </div>
+                <div class="form-group">
+                    <label for="telegram-link">Ссылка на Telegram</label>
+                    <input type="text" id="telegram-link" placeholder="Введите ссылку на Telegram">
+
+</div>
+                <div class="form-group">
+                    <label for="twitch-link">Ссылка на Twitch</label>
+                    <input type="text" id="twitch-link" placeholder="Введите ссылку на Twitch">
+                </div>
+                <button class="update-button" onclick="updateLinks()">Обновить ссылки</button>
+                <button class="logout-button" onclick="logout()">Выйти</button>
+            </div>
+        </div>
+        <div id="public-section">
+            <h1>Мои соцсети</h1>
+            <div>
+                <a href="https://www.youtube.com" id="youtube-button" class="button youtube" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                <a href="https://t.me/telegram" id="telegram-button" class="button telegram" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                <a href="https://www.twitch.tv" id="twitch-button" class="button twitch" target="_blank"><i class="fab fa-twitch"></i> Twitch</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const correctPassword = "admin123"; // Измените на свой пароль
+
+        // Загрузка ссылок из localStorage при загрузке страницы
+        window.onload = function() {
+            const youtubeLink = localStorage.getItem('youtubeLink') || 'https://www.youtube.com';
+            const telegramLink = localStorage.getItem('telegramLink') || 'https://t.me/telegram';
+            const twitchLink = localStorage.getItem('twitchLink') || 'https://www.twitch.tv';
+            document.getElementById('youtube-button').href = youtubeLink;
+            document.getElementById('telegram-button').href = telegramLink;
+            document.getElementById('twitch-button').href = twitchLink;
+            document.getElementById('youtube-link').value = youtubeLink;
+            document.getElementById('telegram-link').value = telegramLink;
+            document.getElementById('twitch-link').value = twitchLink;
+        };
+
+        function toggleAuth() {
+            const authModal = document.getElementById('auth-modal');
+            authModal.classList.toggle('hidden');
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            if (password === correctPassword) {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('admin-section').classList.remove('hidden');
+                document.getElementById('public-section').classList.add('hidden');
+                document.getElementById('password').value = '';
+            } else {
+                alert('Неверный пароль!');
+            }
+        }
+
+        function updateLinks() {
+            const youtubeLink = document.getElementById('youtube-link').value;
+            const telegramLink = document.getElementById('telegram-link').value;
+            const twitchLink = document.getElementById('twitch-link').value;
+
+            const urlPattern = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-./?%&=]*)?$/;
+
+            if (youtubeLink && urlPattern.test(youtubeLink)) {
+                document.getElementById('youtube-button').href = youtubeLink;
+                localStorage.setItem('youtubeLink', youtubeLink);
+            } else if (youtubeLink) {
+                alert('Пожалуйста, введите корректную ссылку для YouTube');
+            }
+
+            if (telegramLink && urlPattern.test(telegramLink)) {
+                document.getElementById('telegram-button').href = telegramLink;
+                localStorage.setItem('telegramLink', telegramLink);
+            } else if (telegramLink) {
+                alert('Пожалуйста, введите корректную ссылку для Telegram');
+            }
+
+            if (twitchLink && urlPattern.test(twitchLink)) {
+                document.getElementById('twitch-button').href = twitchLink;
+                localStorage.setItem('twitchLink', twitchLink);
+            } else if (twitchLink) {
+                alert('Пожалуйста, введите корректную ссылку для Twitch');
+            }
+        }
+
+function logout() {
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('public-section').classList.remove('hidden');
+            document.getElementById('password').value = '';
+        }
+    </script>
+</body>
+</html>
